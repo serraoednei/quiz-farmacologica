@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz — Por que você não está emagrecendo? | Farmacológica</title>
+  <meta name="description" content="Descubra por que sua dieta não funciona e receba sua solução personalizada da Farmacológica." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #7C3AED;
+      --brand-light: #A78BFA;
+      --brand-dark:  #5B21B6;
+      --accent:      #EC4899;
+      --accent-light:#F9A8D4;
+      --bg:          #FAF5FF;
+      --card:        #FFFFFF;
+      --text:        #1F2937;
+      --muted:       #6B7280;
+      --border:      #E5E7EB;
+      --success:     #10B981;
+      --radius:      16px;
+      --shadow:      0 8px 32px rgba(124,58,237,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 16px 48px;
+    }
+
+    /* ─── Header ───────────────────────────────────────────────── */
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-top: 8px;
+    }
+    .logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--brand);
+      opacity: .8;
+    }
+
+    /* ─── Progress ─────────────────────────────────────────────── */
+    .progress-wrap {
+      width: 100%;
+      max-width: 540px;
+      margin-bottom: 20px;
+    }
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-bar-bg {
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      border-radius: 99px;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+
+    /* ─── Card ──────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 540px;
+      animation: slideUp .35s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ─── Cover (tela inicial) ──────────────────────────────────── */
+    .cover-emoji { font-size: 52px; margin-bottom: 12px; text-align:center; }
+
+    .cover-tag {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 16px;
+    }
+
+    .cover h1 {
+      font-size: clamp(22px, 5vw, 28px);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .cover p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .cover-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stat-pill span { font-size: 14px; }
+
+    /* ─── Question ──────────────────────────────────────────────── */
+    .question-num {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: clamp(17px, 4vw, 21px);
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 24px;
+    }
+
+    /* ─── Options ───────────────────────────────────────────────── */
+    .options { display: flex; flex-direction: column; gap: 11px; }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s, transform .15s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .option:hover  { border-color: var(--brand-light); background: #F5F3FF; }
+    .option:active { transform: scale(.98); }
+    .option.selected {
+      border-color: var(--brand);
+      background: linear-gradient(135deg, #EDE9FE, #FCE7F3);
+    }
+
+    .opt-letter {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      color: var(--muted);
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .option.selected .opt-letter {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .opt-text { font-size: 14px; font-weight: 500; line-height: 1.4; }
+
+    /* ─── Lead Form ─────────────────────────────────────────────── */
+    .lead-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .lead-sub {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+      color: var(--text);
+      background: #fff;
+    }
+    .form-group input:focus { border-color: var(--brand); }
+    .form-group input::placeholder { color: #B0B8C5; }
+
+    /* ─── Buttons ───────────────────────────────────────────────── */
+    .btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      margin-top: 24px;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--accent) 100%);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(124,58,237,.30);
+    }
+    .btn-primary:hover:not(:disabled) { opacity: .92; }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 4px 18px rgba(37,211,102,.35);
+      font-size: 15px;
+    }
+    .btn-instagram {
+      background: linear-gradient(135deg, #833AB4, #FD1D1D, #FCB045);
+      color: #fff;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 4px 18px rgba(131,58,180,.30);
+      font-size: 15px;
+    }
+
+    .cta-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+    .cta-buttons .btn { margin-top: 0; }
+
+    /* ─── Result ────────────────────────────────────────────────── */
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .badge-red    { background:#FEE2E2; color:#DC2626; }
+    .badge-yellow { background:#FEF3C7; color:#D97706; }
+    .badge-green  { background:#D1FAE5; color:#059669; }
+
+    .result-title {
+      font-size: clamp(20px, 5vw, 26px);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 16px;
+    }
+    .result-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .result-bullets {
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .bullet-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .result-cta-text {
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    /* ─── Nav ───────────────────────────────────────────────────── */
+    .nav-back {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 0;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 16px;
+    }
+    .nav-back:hover { color: var(--brand); }
+
+    /* ─── Utility ───────────────────────────────────────────────── */
+    .hidden  { display: none !important; }
+    .center  { text-align: center; }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+    .privacy {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo">Farmacológica</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-info">
+      <span id="progressLabel">Pergunta 1 de 6</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <!-- ── TELA 0: Cover ── -->
+  <div class="card cover" id="screen-cover">
+    <div style="text-align:center">
+      <div class="cover-emoji">🔬</div>
+      <div class="cover-tag">Quiz Gratuito</div>
+    </div>
+    <h1>Por que você não está emagrecendo mesmo fazendo dieta?</h1>
+    <p>Responda 6 perguntas rápidas e descubra <strong>exatamente</strong> o que está travando o seu emagrecimento — e qual solução é certa para o seu corpo.</p>
+    <div class="cover-stats">
+      <div class="stat-pill"><span>⏱</span> 2 minutos</div>
+      <div class="stat-pill"><span>🎯</span> Resultado personalizado</div>
+      <div class="stat-pill"><span>🆓</span> 100% gratuito</div>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Descobrir meu perfil →</button>
+    <p class="privacy">🔒 Suas respostas são confidenciais e usadas apenas para personalizar sua solução.</p>
+  </div>
+
+  <!-- ── TELAS DE PERGUNTAS (geradas via JS) ── -->
+  <div id="quiz-screens"></div>
+
+  <!-- ── TELA 7: Lead Capture ── -->
+  <div class="card hidden" id="screen-lead">
+    <div class="question-num">Quase lá! ✨</div>
+    <div class="lead-title">Para onde enviamos seu resultado?</div>
+    <div class="lead-sub">Seu perfil está pronto. Informe seus dados para receber a solução personalizada.</div>
+    <div class="form-group">
+      <label for="inputName">Seu nome</label>
+      <input type="text" id="inputName" placeholder="Ex: Maria Silva" autocomplete="given-name" />
+    </div>
+    <div class="form-group">
+      <label for="inputPhone">Seu WhatsApp</label>
+      <input type="tel" id="inputPhone" placeholder="(11) 99999-9999" autocomplete="tel" />
+    </div>
+    <button class="btn btn-primary" id="btnLead" onclick="showResult()" disabled>
+      Ver meu resultado →
+    </button>
+    <p class="privacy">🔒 Não enviamos spam. Seus dados são usados apenas para enviar sua solução.</p>
+    <button class="nav-back" onclick="goTo(6)">← Voltar</button>
+  </div>
+
+  <!-- ── TELA 8: Resultado A — Metabolismo Resistente ── -->
+  <div class="card hidden" id="screen-result-a">
+    <div class="result-badge badge-red">🔴 Seu perfil</div>
+    <div class="result-title">Metabolismo Resistente</div>
+    <div class="result-desc">
+      Seu corpo está em <strong>modo de sobrevivência</strong>. Dietas convencionais não funcionam porque o problema é metabólico — não de força de vontade.
+    </div>
+    <div class="result-bullets">
+      <div class="bullet"><span class="bullet-icon">⚡</span><span><strong>O que acontece:</strong> após anos de dieta, seu metabolismo desacelerou e resiste a qualquer redução calórica.</span></div>
+      <div class="bullet"><span class="bullet-icon">🧬</span><span><strong>Por que sua dieta falha:</strong> seu corpo interpreta restrição como ameaça e segura a gordura como reserva.</span></div>
+      <div class="bullet"><span class="bullet-icon">💊</span><span><strong>A solução:</strong> fórmula manipulada para reativar o metabolismo — termogênicos naturais + suporte à tireoide + controle de cortisol.</span></div>
+    </div>
+    <div class="result-cta-text">Fale com nossa especialista agora 👇</div>
+    <div class="cta-buttons">
+      <a href="https://ig.me/m/farmacologicafarmacia" target="_blank" rel="noopener">
+        <button class="btn btn-instagram" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Falar no Instagram
+        </button>
+      </a>
+      <a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Fiz%20o%20quiz%20e%20meu%20perfil%20%C3%A9%20Metabolismo%20Resistente.%20Quero%20saber%20mais%20sobre%20a%20f%C3%B3rmula!" target="_blank" rel="noopener">
+        <button class="btn btn-whatsapp" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar no WhatsApp
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── TELA 9: Resultado B — Inchaço Hormonal ── -->
+  <div class="card hidden" id="screen-result-b">
+    <div class="result-badge badge-yellow">🟡 Seu perfil</div>
+    <div class="result-title">Inchaço Hormonal</div>
+    <div class="result-desc">
+      Sua barriga não é <strong>só gordura</strong> — é inflamação e retenção hormonal. A boa notícia: tem solução específica para isso.
+    </div>
+    <div class="result-bullets">
+      <div class="bullet"><span class="bullet-icon">💧</span><span><strong>O que acontece:</strong> desequilíbrio hormonal causa retenção de líquido e inflamação crônica que a dieta sozinha não resolve.</span></div>
+      <div class="bullet"><span class="bullet-icon">📉</span><span><strong>Por que não adianta cortar calorias:</strong> o inchaço não é gordura — é resposta inflamatória que precisa de tratamento específico.</span></div>
+      <div class="bullet"><span class="bullet-icon">✨</span><span><strong>A solução:</strong> fórmula anti-inflamatória + drenante manipulada que atua direto na causa — resultado visível em até 15 dias.</span></div>
+    </div>
+    <div class="result-cta-text">Fale com nossa especialista agora 👇</div>
+    <div class="cta-buttons">
+      <a href="https://ig.me/m/farmacologicafarmacia" target="_blank" rel="noopener">
+        <button class="btn btn-instagram" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Falar no Instagram
+        </button>
+      </a>
+      <a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Fiz%20o%20quiz%20e%20meu%20perfil%20%C3%A9%20In%C3%A7a%C3%A7o%20Hormonal.%20Quero%20saber%20mais!" target="_blank" rel="noopener">
+        <button class="btn btn-whatsapp" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar no WhatsApp
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── TELA 10: Resultado C — Efeito Sanfona ── -->
+  <div class="card hidden" id="screen-result-c">
+    <div class="result-badge badge-green">🟢 Seu perfil</div>
+    <div class="result-title">Ciclo do Efeito Sanfona</div>
+    <div class="result-desc">
+      Você não tem problema de <strong>disciplina</strong>. Você tem problema de suporte bioquímico. Emagrecer e engordar repetidamente é um padrão que se quebra com a abordagem certa.
+    </div>
+    <div class="result-bullets">
+      <div class="bullet"><span class="bullet-icon">🔄</span><span><strong>O que acontece:</strong> cada ciclo de dieta reduz a massa muscular e piora o metabolismo, tornando cada tentativa mais difícil.</span></div>
+      <div class="bullet"><span class="bullet-icon">🧠</span><span><strong>O papel da ansiedade:</strong> o efeito sanfona tem componente emocional — o corpo busca compensação após restrição.</span></div>
+      <div class="bullet"><span class="bullet-icon">🌿</span><span><strong>A solução:</strong> fórmula de controle de saciedade + modulação do humor que quebra esse ciclo sem efeito rebote.</span></div>
+    </div>
+    <div class="result-cta-text">Fale com nossa especialista agora 👇</div>
+    <div class="cta-buttons">
+      <a href="https://ig.me/m/farmacologicafarmacia" target="_blank" rel="noopener">
+        <button class="btn btn-instagram" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Falar no Instagram
+        </button>
+      </a>
+      <a href="https://wa.me/5500000000000?text=Ol%C3%A1!%20Fiz%20o%20quiz%20e%20meu%20perfil%20%C3%A9%20Efeito%20Sanfona.%20Quero%20saber%20mais!" target="_blank" rel="noopener">
+        <button class="btn btn-whatsapp" style="width:100%">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Falar no WhatsApp
+        </button>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── JAVASCRIPT ── -->
+  <script>
+    const QUESTIONS = [
+      {
+        text: "Há quanto tempo você tenta emagrecer?",
+        options: [
+          "Menos de 6 meses",
+          "1 a 2 anos",
+          "Mais de 3 anos",
+          "Emagreço e engordo — é um ciclo sem fim"
+        ],
+        scores: [0, 1, 2, 3]  // 3 = sanfona
+      },
+      {
+        text: "O que você já tentou?",
+        options: [
+          "Low carb ou jejum intermitente",
+          "Academia e exercícios regulares",
+          "Remédios ou suplementos de farmácia",
+          "Nada ainda, quero começar certo"
+        ],
+        scores: [1, 1, 2, 0]
+      },
+      {
+        text: "Como você descreveria sua barriga hoje?",
+        options: [
+          "Inchaço mesmo comendo pouco",
+          "Gordura localizada que não sai com nenhuma dieta",
+          "Acumulou depois dos 35/40 anos e não vai embora",
+          "Não tenho problema na barriga, quero perder peso geral"
+        ],
+        scores: [10, 5, 20, 5]  // 10=B, 20=A
+      },
+      {
+        text: "Como está sua energia no dia a dia?",
+        options: [
+          "Acordo cansada mesmo dormindo bem",
+          "Pico de manhã, queda à tarde",
+          "Sem energia o dia todo — café não resolve mais",
+          "Energia boa, só quero emagrecer"
+        ],
+        scores: [2, 1, 3, 0]
+      },
+      {
+        text: "Você tem ou suspeita de algum desses problemas?",
+        options: [
+          "Hipotireoidismo ou tireoide lenta",
+          "SOP (síndrome do ovário policístico)",
+          "Menopausa ou perimenopausa",
+          "Nenhum — meus exames estão normais"
+        ],
+        scores: [20, 15, 20, 0]  // 15/20 = metabolismo resistente
+      },
+      {
+        text: "O que você mais quer conquistar em 60 dias?",
+        options: [
+          "Perder de 5 a 10kg de forma definitiva",
+          "Acabar com o inchaço e a barriga",
+          "Ter energia para trabalhar e cuidar da família",
+          "Parar o efeito sanfona de uma vez por todas"
+        ],
+        scores: [5, 10, 2, 3]
+      }
+    ];
+
+    let current   = 0;
+    let answers   = [];
+    let scoreA    = 0;  // Metabolismo
+    let scoreB    = 0;  // Inchaço
+    let scoreC    = 0;  // Sanfona
+
+    // ── Render perguntas ──────────────────────────────────────────
+    function buildScreens() {
+      const container = document.getElementById('quiz-screens');
+      QUESTIONS.forEach((q, i) => {
+        const div = document.createElement('div');
+        div.className = 'card hidden';
+        div.id = `screen-q${i}`;
+        const letters = ['A','B','C','D'];
+        div.innerHTML = `
+          <div class="question-num">Pergunta ${i+1} de ${QUESTIONS.length}</div>
+          <div class="question-text">${q.text}</div>
+          <div class="options" id="opts-${i}">
+            ${q.options.map((o, j) => `
+              <div class="option" id="opt-${i}-${j}" onclick="selectOption(${i}, ${j})">
+                <div class="opt-letter">${letters[j]}</div>
+                <div class="opt-text">${o}</div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-primary" id="btn-q${i}" onclick="nextQuestion(${i})" disabled style="margin-top:24px">
+            ${i < QUESTIONS.length - 1 ? 'Próxima →' : 'Ver meu resultado →'}
+          </button>
+          ${i > 0 ? `<button class="nav-back" onclick="goTo(${i-1})">← Voltar</button>` : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function selectOption(qIdx, optIdx) {
+      document.querySelectorAll(`#opts-${qIdx} .option`).forEach(el => el.classList.remove('selected'));
+      document.getElementById(`opt-${qIdx}-${optIdx}`).classList.add('selected');
+      answers[qIdx] = optIdx;
+      document.getElementById(`btn-q${qIdx}`).disabled = false;
+    }
+
+    function nextQuestion(qIdx) {
+      goTo(qIdx + 1);
+    }
+
+    function goTo(screenIdx) {
+      // hide all
+      document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+
+      if (screenIdx === 0) {
+        document.getElementById('screen-cover').classList.remove('hidden');
+        setProgress(0, 0);
+        return;
+      }
+      if (screenIdx <= QUESTIONS.length) {
+        const idx = screenIdx - 1;
+        document.getElementById(`screen-q${idx}`).classList.remove('hidden');
+        setProgress(screenIdx, QUESTIONS.length);
+        current = idx;
+        return;
+      }
+      if (screenIdx === QUESTIONS.length + 1) {
+        document.getElementById('screen-lead').classList.remove('hidden');
+        setProgress(QUESTIONS.length + 1, QUESTIONS.length + 1);
+        return;
+      }
+    }
+
+    function setProgress(step, total) {
+      const wrap = document.getElementById('progressWrap');
+      if (step === 0) { wrap.classList.add('hidden'); return; }
+      wrap.classList.remove('hidden');
+      const pct = Math.round((step / (total)) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressPct').textContent = pct + '%';
+      if (step <= QUESTIONS.length) {
+        document.getElementById('progressLabel').textContent = `Pergunta ${step} de ${QUESTIONS.length}`;
+      } else {
+        document.getElementById('progressLabel').textContent = 'Quase lá!';
+      }
+    }
+
+    function startQuiz() {
+      buildScreens();
+      goTo(1);
+    }
+
+    // ── Lead form validation ──────────────────────────────────────
+    document.addEventListener('input', () => {
+      const name  = document.getElementById('inputName')?.value.trim();
+      const phone = document.getElementById('inputPhone')?.value.trim();
+      const btn   = document.getElementById('btnLead');
+      if (btn) btn.disabled = !(name && phone && phone.length >= 8);
+    });
+
+    // ── Calculate & show result ───────────────────────────────────
+    function showResult() {
+      // Tally scores
+      answers.forEach((optIdx, qIdx) => {
+        const s = QUESTIONS[qIdx].scores[optIdx];
+        if (s >= 15) scoreA += s;       // high score = metabolismo
+        else if (s === 10) scoreB += s; // inchaço marker
+        else if (s === 3)  scoreC += s; // sanfona marker
+        else               scoreA += s;
+      });
+
+      document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
+      document.getElementById('progressWrap').classList.add('hidden');
+
+      // Decide result
+      if (scoreB >= 10) {
+        document.getElementById('screen-result-b').classList.remove('hidden');
+      } else if (scoreC >= 6) {
+        document.getElementById('screen-result-c').classList.remove('hidden');
+      } else {
+        document.getElementById('screen-result-a').classList.remove('hidden');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Init ──────────────────────────────────────────────────────
+    document.getElementById('progressWrap').classList.add('hidden');
+  </script>
+</body>
+</html>

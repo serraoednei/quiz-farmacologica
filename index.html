@@ -677,28 +677,62 @@
     });
 
     // ── Calculate & show result ───────────────────────────────────
+    const FORMULAS = {
+      a: {
+        nome: '🔴 Metabolismo Resistente',
+        formula: 'Forscolina 25mg + Ashwagandha KSM-66 300mg + Selênio 100mcg + Zinco 15mg + Chá Verde EGCG 400mg + Vitamina D3 2000UI',
+        observacao: 'Protocolo Metabolismo Ativo — cápsulas 2x/dia (manhã e almoço). Resultado esperado em 3–6 semanas.'
+      },
+      b: {
+        nome: '🟡 Inchaço Hormonal',
+        formula: 'Indol-3-carbinol 200mg + DIM 100mg + Cavalinha 300mg + Cardo Mariano 150mg + Cromo Picolinato 200mcg + Magnésio Dimalato 300mg',
+        observacao: 'Protocolo Desincha e Equilibra — cápsulas 2x/dia (manhã e jantar). Desinchamento em 2–4 semanas.'
+      },
+      c: {
+        nome: '🟢 Efeito Sanfona',
+        formula: '5-HTP 100mg + Griffonia 200mg + L-Glutamina 2g + Berberina 500mg + Psyllium 5g + Vitamina B6 P5P 25mg',
+        observacao: 'Protocolo Equilíbrio e Saciedade — cápsulas + sachê. Saciedade em 2–3 semanas. ATENÇÃO: contraindicado com antidepressivos ISRS.'
+      }
+    };
+
     function showResult() {
       // Tally scores
       answers.forEach((optIdx, qIdx) => {
         const s = QUESTIONS[qIdx].scores[optIdx];
-        if (s >= 15) scoreA += s;       // high score = metabolismo
-        else if (s === 10) scoreB += s; // inchaço marker
-        else if (s === 3)  scoreC += s; // sanfona marker
+        if (s >= 15) scoreA += s;
+        else if (s === 10) scoreB += s;
+        else if (s === 3)  scoreC += s;
         else               scoreA += s;
       });
 
+      // Decide result
+      let perfil;
+      if (scoreB >= 10)     perfil = 'b';
+      else if (scoreC >= 6) perfil = 'c';
+      else                  perfil = 'a';
+
+      // Enviar dados por e-mail via Formsubmit
+      const nome   = document.getElementById('inputName').value.trim();
+      const tel    = document.getElementById('inputPhone').value.trim();
+      const f      = FORMULAS[perfil];
+
+      fetch('https://formsubmit.co/ajax/serraoednei@gmail.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `🧪 Novo lead do quiz — ${f.nome}`,
+          Nome: nome,
+          WhatsApp: tel,
+          Perfil: f.nome,
+          'Fórmula Sugerida': f.formula,
+          Observações: f.observacao,
+          _template: 'table'
+        })
+      }).catch(() => {}); // silencioso se falhar
+
       document.querySelectorAll('.card').forEach(c => c.classList.add('hidden'));
       document.getElementById('progressWrap').classList.add('hidden');
-
-      // Decide result
-      if (scoreB >= 10) {
-        document.getElementById('screen-result-b').classList.remove('hidden');
-      } else if (scoreC >= 6) {
-        document.getElementById('screen-result-c').classList.remove('hidden');
-      } else {
-        document.getElementById('screen-result-a').classList.remove('hidden');
-      }
-
+      document.getElementById(`screen-result-${perfil}`).classList.remove('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
